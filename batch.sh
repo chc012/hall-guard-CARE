@@ -1,14 +1,14 @@
 #!/bin/bash
 #SBATCH --account=nlp
 #SBATCH --partition=jag-standard
-#SBATCH --time=06:00:00
+#SBATCH --time=23:00:00
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=16G
 
 # only use the following on partition with GPUs
 #SBATCH --gres=gpu:4
-#SBATCH --constraint=12G
+#SBATCH --constraint=24G
 
 #SBATCH --job-name="train-hallguard"
 #SBATCH --output=sample-%j.out

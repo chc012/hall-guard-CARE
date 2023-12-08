@@ -42,8 +42,8 @@ def main():
     # train with trainer
     training_args = TrainingArguments(
         output_dir="hall_guard",
-        per_device_train_batch_size=16,
-        per_device_eval_batch_size=16,
+        per_device_train_batch_size=32,
+        per_device_eval_batch_size=32,
         evaluation_strategy="epoch",
         save_strategy="epoch",
         logging_dir="logs",
@@ -66,16 +66,14 @@ def main():
     def optuna_hp_space(trial):
         return {
             "learning_rate": trial.suggest_float(
-                "learning_rate", 1e-8, 1e-3, log=True),
-            "per_device_train_batch_size": trial.suggest_categorical(
-                "per_device_train_batch_size", [16, 32, 64]),
+                "learning_rate", 1e-8, 1e-5, log=True)
         }
 
     best_trial = trainer.hyperparameter_search(
-        direction="minimize",
+        direction="maximize",
         backend="optuna",
         hp_space=optuna_hp_space,
-        n_trials=30
+        n_trials=5
     )
 
     print("Best score: {:.3f}".format(best_trial.objective))
