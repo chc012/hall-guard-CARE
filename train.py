@@ -81,7 +81,7 @@ def main():
 
     best_trial.hyperparameters["score"] = best_trial.objective
     with open("best_model.json", "w") as f:
-        json.dump()
+        json.dump(best_trial.hyperparameters, f)
 
     # trainer.train()
 
