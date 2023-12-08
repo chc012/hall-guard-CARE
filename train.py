@@ -6,6 +6,7 @@ from transformers import TrainingArguments
 from transformers import Trainer
 import numpy as np
 import evaluate
+import json
 
 def main():
     # Load the dataset
@@ -70,14 +71,21 @@ def main():
                 "per_device_train_batch_size", [16, 32, 64, 128]),
         }
 
-    best_trials = trainer.hyperparameter_search(
+    best_trial = trainer.hyperparameter_search(
         direction="minimize",
         backend="optuna",
         hp_space=optuna_hp_space,
         n_trials=20
     )
 
-    trainer.train()
+    print("Best score: {:.3f}".format(best_trial.objective))
+    print("Best hyperparameters:", best_trial.hyperparameters)
+
+    best_trial.hyperparameters["score"] = best_trial.objective
+    with open("best_model.json", "w") as f:
+        json.dump()
+
+    # trainer.train()
 
 if __name__ == "__main__":
     main()
