@@ -66,16 +66,16 @@ def main():
     def optuna_hp_space(trial):
         return {
             "learning_rate": trial.suggest_float(
-                "learning_rate", 1e-6, 1e-3, log=True),
+                "learning_rate", 1e-8, 1e-3, log=True),
             "per_device_train_batch_size": trial.suggest_categorical(
-                "per_device_train_batch_size", [16, 32, 64, 128]),
+                "per_device_train_batch_size", [16, 32, 64]),
         }
 
     best_trial = trainer.hyperparameter_search(
         direction="minimize",
         backend="optuna",
         hp_space=optuna_hp_space,
-        n_trials=20
+        n_trials=30
     )
 
     print("Best score: {:.3f}".format(best_trial.objective))

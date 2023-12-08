@@ -5,6 +5,8 @@ data/val.csv
 data/test.csv
 playground.ipynb
 tutorials.ipynb
+hall_guard
+!hall_guard/.gitkeep
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
