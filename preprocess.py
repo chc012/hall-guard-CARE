@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import json
+from copy import deepcopy
 
 DATA_PATH = "data/ESConv.json"
 SEP_TOKEN = "</s>"
@@ -29,11 +30,13 @@ def no_bad_words(sample):
     return True
 
 def add_bad_word(sample):
+    sample = deepcopy(sample)
     bad_word = np.random.choice(BAD_WORDS)
     sample[-1] = sample[-1] + " " + bad_word
     return sample
 
 def randomize_response(sample, data):
+    sample = deepcopy(sample)
     idx = np.random.randint(len(data))
     random_response = data[idx][-1]
     sample[-1] = random_response

@@ -33,17 +33,16 @@ def main():
     id2label = {0: "NEGATIVE", 1: "POSITIVE"}
     label2id = {"NEGATIVE": 0, "POSITIVE": 1}
 
-    model = RobertaForSequenceClassification.from_pretrained(
-        "roberta-base", num_labels=2, id2label=id2label, label2id=label2id)
+    # hyperparameter search
+    def model_init(trial):
+        return RobertaForSequenceClassification.from_pretrained(
+            "roberta-base", num_labels=2, id2label=id2label, label2id=label2id)
 
     # train with trainer
     training_args = TrainingArguments(
         output_dir="hall_guard",
-        learning_rate=2e-5,
         per_device_train_batch_size=16,
         per_device_eval_batch_size=16,
-        num_train_epochs=5,
-        weight_decay=0.01,
         evaluation_strategy="epoch",
         save_strategy="epoch",
         logging_dir="logs",
@@ -52,13 +51,30 @@ def main():
     )
 
     trainer = Trainer(
-        model=model,
+        model=None,
         args=training_args,
         train_dataset=tokenized_dataset["train"],
         eval_dataset=tokenized_dataset["test"],
         tokenizer=tokenizer,
+        model_init=model_init,
         data_collator=data_collator,
         compute_metrics=compute_metrics,
+    )
+
+    # Hyperparameter search
+    def optuna_hp_space(trial):
+        return {
+            "learning_rate": trial.suggest_float(
+                "learning_rate", 1e-6, 1e-3, log=True),
+            "per_device_train_batch_size": trial.suggest_categorical(
+                "per_device_train_batch_size", [16, 32, 64, 128]),
+        }
+
+    best_trials = trainer.hyperparameter_search(
+        direction="minimize",
+        backend="optuna",
+        hp_space=optuna_hp_space,
+        n_trials=20
     )
 
     trainer.train()
