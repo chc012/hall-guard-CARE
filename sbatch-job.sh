@@ -11,7 +11,7 @@
 #SBATCH --constraint=24G
 
 #SBATCH --job-name="train-hallguard"
-#SBATCH --output=sample-%j.out
+#SBATCH --output=sbatch-job-%j.out
 
 # only use the following if you want email notification
 #SBATCH --mail-user=chc012@stanford.edu

@@ -54,7 +54,7 @@ def main():
     trainer = Trainer(
         model=None,
         args=training_args,
-        train_dataset=tokenized_dataset["test"], # TODO: change to train
+        train_dataset=tokenized_dataset["train"],
         eval_dataset=tokenized_dataset["val"],
         tokenizer=tokenizer,
         model_init=model_init,
@@ -92,9 +92,9 @@ def main():
     training_args = TrainingArguments(
         output_dir="hall_guard",
         num_train_epochs=10,
-        learning_rate=best_trial.hyperparameters.learning_rate,
-        per_device_train_batch_size=best_trial.hyperparameters.per_device_train_batch_size,
-        per_device_eval_batch_size=best_trial.hyperparameters.per_device_train_batch_size,
+        learning_rate=best_trial.hyperparameters["learning_rate"],
+        per_device_train_batch_size=best_trial.hyperparameters["per_device_train_batch_size"],
+        per_device_eval_batch_size=best_trial.hyperparameters["per_device_train_batch_size"],
         evaluation_strategy="epoch",
         save_strategy="epoch",
         logging_dir="logs",
