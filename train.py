@@ -42,8 +42,8 @@ def main():
     # train with trainer
     training_args = TrainingArguments(
         output_dir="hall_guard",
-        per_device_train_batch_size=32,
-        per_device_eval_batch_size=32,
+        per_device_train_batch_size=16,
+        per_device_eval_batch_size=16,
         evaluation_strategy="epoch",
         save_strategy="epoch",
         logging_dir="logs",
@@ -54,8 +54,8 @@ def main():
     trainer = Trainer(
         model=None,
         args=training_args,
-        train_dataset=tokenized_dataset["train"],
-        eval_dataset=tokenized_dataset["test"],
+        train_dataset=tokenized_dataset["test"], # TODO: change to train
+        eval_dataset=tokenized_dataset["val"],
         tokenizer=tokenizer,
         model_init=model_init,
         data_collator=data_collator,
@@ -66,14 +66,16 @@ def main():
     def optuna_hp_space(trial):
         return {
             "learning_rate": trial.suggest_float(
-                "learning_rate", 1e-8, 1e-5, log=True)
+                "learning_rate", 1e-7, 1e-5, log=True),
+            "per_device_train_batch_size": trial.suggest_categorical(
+                "per_device_train_batch_size", [16, 32]),
         }
 
     best_trial = trainer.hyperparameter_search(
         direction="maximize",
         backend="optuna",
         hp_space=optuna_hp_space,
-        n_trials=5
+        n_trials=20
     )
 
     print("Best score: {:.3f}".format(best_trial.objective))
@@ -83,7 +85,34 @@ def main():
     with open("best_model.json", "w") as f:
         json.dump(best_trial.hyperparameters, f)
 
-    # trainer.train()
+    # Final model training
+    model = RobertaForSequenceClassification.from_pretrained(
+        "roberta-base", num_labels=2, id2label=id2label, label2id=label2id)
+
+    training_args = TrainingArguments(
+        output_dir="hall_guard",
+        num_train_epochs=10,
+        learning_rate=best_trial.hyperparameters.learning_rate,
+        per_device_train_batch_size=best_trial.hyperparameters.per_device_train_batch_size,
+        per_device_eval_batch_size=best_trial.hyperparameters.per_device_train_batch_size,
+        evaluation_strategy="epoch",
+        save_strategy="epoch",
+        logging_dir="logs",
+        logging_steps=100,
+        load_best_model_at_end=True
+    )
+
+    trainer = Trainer(
+        model=model,
+        args=training_args,
+        train_dataset=tokenized_dataset["train"],
+        eval_dataset=tokenized_dataset["val"],
+        tokenizer=tokenizer,
+        data_collator=data_collator,
+        compute_metrics=compute_metrics,
+    )
+
+    trainer.train()
 
 if __name__ == "__main__":
     main()
