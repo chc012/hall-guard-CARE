@@ -3,7 +3,8 @@ playground.ipynb
 tutorials.ipynb
 data
 hall_guard
-hallguard_deploy/model
+hallguard/model
+.deploy
 
 !.gitkeep
 
