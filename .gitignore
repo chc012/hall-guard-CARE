@@ -1,11 +1,10 @@
 # Manually added
-data/ESConv.json
-data/train.csv
-data/val.csv
-data/test.csv
 playground.ipynb
 tutorials.ipynb
+data
 hall_guard
+
+!data/.gitkeep
 !hall_guard/.gitkeep
 
 # Byte-compiled / optimized / DLL files

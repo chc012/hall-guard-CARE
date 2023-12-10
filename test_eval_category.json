@@ -1,0 +1,23 @@
+{
+    "test_good": {
+        "eval_loss": 0.13613702356815338,
+        "eval_accuracy": 0.9618384401114206,
+        "eval_runtime": 47.9907,
+        "eval_samples_per_second": 74.806,
+        "eval_steps_per_second": 9.356
+    },
+    "test_bad_word": {
+        "eval_loss": 0.001921529066748917,
+        "eval_accuracy": 0.9996946564885496,
+        "eval_runtime": 44.0579,
+        "eval_samples_per_second": 74.334,
+        "eval_steps_per_second": 9.306
+    },
+    "test_bad_response": {
+        "eval_loss": 0.4507375657558441,
+        "eval_accuracy": 0.8631549609810479,
+        "eval_runtime": 52.2498,
+        "eval_samples_per_second": 68.67,
+        "eval_steps_per_second": 8.593
+    }
+}

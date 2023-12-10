@@ -1,1 +1,5 @@
-{"learning_rate": 9.851175085603746e-06, "per_device_train_batch_size": 32, "score": 0.9009141846063108}
+{
+    "learning_rate": 9.851175085603746e-06,
+    "per_device_train_batch_size": 32,
+    "score": 0.9009141846063108
+}
