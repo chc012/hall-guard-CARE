@@ -3,9 +3,9 @@ playground.ipynb
 tutorials.ipynb
 data
 hall_guard
+hallguard_deploy/model
 
-!data/.gitkeep
-!hall_guard/.gitkeep
+!.gitkeep
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
